@@ -4,3 +4,6 @@
 [submodule "4"]
 	path = 4
 	url = https://github.com/Delemangi/KIII-4
+[submodule "5"]
+	path = 5
+	url = https://github.com/Delemangi/KIII-5
