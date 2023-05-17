@@ -1,0 +1,60 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: mcu-all
+spec:
+  stripPrefix:
+    forceSlash: false
+    prefixes:
+      - /ver1
+      - /ver2
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mcu-all
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: 'false'
+    traefik.ingress.kubernetes.io/router.middlewares: default-mcu-all@kubernetescrd
+spec:
+  rules:
+    - host: localhost
+      http:
+        paths:
+          - path: /ver1
+            pathType: Prefix
+            backend:
+              service:
+                name: app-v1
+                port:
+                  number: 80
+    - host: localhost
+      http:
+        paths:
+          - path: /ver2
+            pathType: Prefix
+            backend:
+              service:
+                name: app-v2
+                port:
+                  number: 80
+    - host: ver1.206055.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: app-v1
+                port:
+                  number: 80
+    - host: ver2.206055.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: app-v2
+                port:
+                  number: 80
