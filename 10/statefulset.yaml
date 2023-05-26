@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: emqtt
+spec:
+  replicas: 3
+  serviceName: emqtt
+  selector:
+    matchLabels:
+      app: emqtt
+  template:
+    metadata:
+      labels:
+        app: emqtt
+    spec:
+      containers:
+        - name: emqtt
+          image: emqx:latest
+          volumeMounts:
+            - name: emqtt-data
+              mountPath: /opt/emqx/data
+          ports:
+            - containerPort: 1883
+            - containerPort: 8083
+      volumes:
+        - name: emqtt-data
+          persistentVolumeClaim:
+            claimName: emqtt-pvc
